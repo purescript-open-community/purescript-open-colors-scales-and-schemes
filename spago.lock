@@ -60,8 +60,12 @@
         },
         "test": {
           "dependencies": [
-            "console",
+            "aff",
             "effect",
+            "foldable-traversable",
+            "integers",
+            "lists",
+            "maybe",
             "test-unit"
           ],
           "build_plan": [

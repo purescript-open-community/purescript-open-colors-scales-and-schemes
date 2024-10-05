@@ -14,8 +14,12 @@ package:
   test:
     main: Test.Main
     dependencies:
-      - console
+      - aff
       - effect
+      - foldable-traversable
+      - integers
+      - lists
+      - maybe
       - test-unit
 
 workspace:
