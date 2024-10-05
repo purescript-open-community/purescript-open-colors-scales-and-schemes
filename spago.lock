@@ -5,7 +5,9 @@
         "path": "./",
         "core": {
           "dependencies": [
+            "arrays",
             "colors",
+            "partial",
             "prelude"
           ],
           "build_plan": [
