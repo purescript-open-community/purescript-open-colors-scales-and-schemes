@@ -2,7 +2,7 @@
 -- | white).
 -- | See: https://www.w3.org/TR/css3-color/#svg-color
 
-module Test.Scheme.X11 where
+module Color.Scheme.X11 where
 
 import Color (Color, rgb)
 

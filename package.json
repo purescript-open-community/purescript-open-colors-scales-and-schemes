@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "scripts": {
+    "clean": "rm -rfd output output-es .spago dist",
+    "build": "spago build --censor-stats --strict --pedantic-packages --ensure-ranges",
+    "format": "purs-tidy format-in-place src test",
+    "check": "purs-tidy check src test",
+    "test": "spago test",
+    "update-docs": "spago docs --format markdown",
+    "build:watch": "watchexec -e purs,js,yaml -- spago build",
+    "publish": "spago publish"
+  }
+}

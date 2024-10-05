@@ -1,9 +1,18 @@
-.*
-!.gitignore
-!.github
-!.editorconfig
-!.tidyrc.json
+/node_modules/
+/src/.webpack.js
 
-output
-generated-docs
-bower_components
+.psc-ide-port
+.psc-package
+
+/bower_components/
+/.pulp-cache/
+/output/
+/.psci*
+
+/documentation/bower_components/
+/documentation/.pulp-cache/
+/documentation/output/
+/documentation/.psci*
+
+/documentation/html/test.js
+/.spago

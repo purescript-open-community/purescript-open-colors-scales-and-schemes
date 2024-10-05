@@ -1,0 +1,21 @@
+package:
+  name: open-colors-scales-and-schemes
+  publish:
+    version: 1.0.0
+    license: "MIT"
+    location:
+      githubOwner: purescript-open-community
+      githubRepo: purescript-open-colors-scales-and-schemes
+  dependencies:
+    - colors
+    - prelude
+  test:
+    main: Test.Main
+    dependencies:
+      - console
+      - effect
+      - test-unit
+workspace:
+  extraPackages: {}
+  packageSet:
+    registry: 60.2.1
