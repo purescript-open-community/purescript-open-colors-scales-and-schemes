@@ -6,5 +6,19 @@ module Color.Scheme.HTML
   ( module Color.Scheme.X11
   ) where
 
-import Color.Scheme.X11 (silver, gray, maroon, red, purple, fuchsia, green,
-                         lime, olive, yellow, navy, blue, teal, aqua)
+import Color.Scheme.X11
+  ( silver
+  , gray
+  , maroon
+  , red
+  , purple
+  , fuchsia
+  , green
+  , lime
+  , olive
+  , yellow
+  , navy
+  , blue
+  , teal
+  , aqua
+  )

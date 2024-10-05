@@ -22,20 +22,22 @@ import Test.Unit.Main (runTest)
 almostEqual :: Color -> Color -> Aff Unit
 almostEqual expected actual =
   if almostEqual' expected actual then success
-  else failure $ "\n    expected: " <> show' expected <>
-                 "\n    got:      " <> show' actual
+  else failure $ "\n    expected: " <> show' expected
+    <> "\n    got:      "
+    <> show' actual
   where
-    show' c = case toHSLA c of
-      {h: _h, s: _s, l: _l, a: _a} -> cssStringRGBA c <> " " <> cssStringHSLA c
-    abs n = if n < 0 then 0 - n else n
-    aE n1 n2 = abs (n1 - n2) <= 1
-    almostEqual' col1 col2 =
-      aE c1.r c2.r &&
-      aE c1.g c2.g &&
-      aE c1.b c2.b
-      where
-        c1 = toRGBA col1
-        c2 = toRGBA col2
+  show' c = case toHSLA c of
+    { h: _h, s: _s, l: _l, a: _a } -> cssStringRGBA c <> " " <> cssStringHSLA c
+  abs n = if n < 0 then 0 - n else n
+  aE n1 n2 = abs (n1 - n2) <= 1
+  almostEqual' col1 col2 =
+    aE c1.r c2.r
+      && aE c1.g c2.g
+      &&
+        aE c1.b c2.b
+    where
+    c1 = toRGBA col1
+    c2 = toRGBA col2
 
 main :: Effect Unit
 main = runTest do
@@ -66,14 +68,16 @@ main = runTest do
     let
       equal :: Maybe Color -> String -> Test
       equal expected hexString =
-        let actual = fromHexString hexString
-        in equal' ("expected " <> show expected <> ", got " <> show actual <> ", in " <> show hexString) expected actual
+        let
+          actual = fromHexString hexString
+        in
+          equal' ("expected " <> show expected <> ", got " <> show actual <> ", in " <> show hexString) expected actual
     equal (Just black) "#000"
     equal (Just black) "#000000"
     equal (Just white) "#fff"
     equal (Just white) "#fffFFF"
     equal (Just white) "#ffffff"
-    equal (Just red)   "#f00"
+    equal (Just red) "#f00"
     equal (Just (rgb 87 166 206)) "#57A6CE"
     equal Nothing "000"
     equal Nothing "000000"
@@ -91,11 +95,11 @@ main = runTest do
     equal (fromHexString "#123456") (Just (fromInt 0x123456))
     equal (fromHexString "#abcdef") (Just (fromInt 0xabcdef))
 
-  let roundtrip h s l = equal color color'
-        where
-          color = hsl h s l
-          color' = case toRGBA color
-            of { r, g, b, a } -> rgba r g b a
+  let
+    roundtrip h s l = equal color color'
+      where
+      color = hsl h s l
+      color' = case toRGBA color of { r, g, b, a } -> rgba r g b a
 
   test "rgb / toRGB (HSL -> RGB -> HSL)" do
     roundtrip 0.0 0.0 1.0
@@ -116,11 +120,13 @@ main = runTest do
     equal red (xyz 0.4123 0.2126 0.01933)
     equal (hsl 109.999 0.08654 0.407843) (xyz 0.13123 0.15372 0.13174)
 
-    let xyzRoundtrip h s l =
-          case toXYZ c of
-            { x, y, z } ->
-              almostEqual c (xyz x y z)
-            where c = hsl h s l
+    let
+      xyzRoundtrip h s l =
+        case toXYZ c of
+          { x, y, z } ->
+            almostEqual c (xyz x y z)
+        where
+        c = hsl h s l
 
     sequence_ do
       hue <- 0 .. 360
@@ -132,10 +138,10 @@ main = runTest do
         almostEqual colorIn1 colorOut1
         almostEqual colorIn2 colorOut2
         where
-          colorIn1 = hsla h' s' l_v' a'
-          colorIn2 = hsva h' s' l_v' a'
-          colorOut1 = case toHSVA colorIn1 of { h, s, v, a } -> hsva h s v a
-          colorOut2 = case toHSVA colorIn2 of { h, s, v, a } -> hsva h s v a
+        colorIn1 = hsla h' s' l_v' a'
+        colorIn2 = hsva h' s' l_v' a'
+        colorOut1 = case toHSVA colorIn1 of { h, s, v, a } -> hsva h s v a
+        colorOut2 = case toHSVA colorIn2 of { h, s, v, a } -> hsva h s v a
     sequence_ do
       hue <- 0 .. 3
       saturation <- 0 .. 4
@@ -144,15 +150,17 @@ main = runTest do
       , hsvRoundtrip 90.0 1.0 (toNumber lightness / 5.0) 1.0
       , hsvRoundtrip 90.0 (toNumber saturation / 5.0) 0.0 1.0
       , hsvRoundtrip 90.0 0.0 (toNumber lightness / 5.0) 1.0
-      , hsvRoundtrip (toNumber (hue * 90)) (toNumber saturation / 5.0) (toNumber lightness / 5.0)  1.0
+      , hsvRoundtrip (toNumber (hue * 90)) (toNumber saturation / 5.0) (toNumber lightness / 5.0) 1.0
       ]
 
   test "lab / toLab (Lab -> HSL -> Lab)" do
-    let labRoundtrip h' s' l' =
-          case toLab col of
-            { l, a, b } ->
-              almostEqual col (lab l a b)
-            where col = hsl h' s' l'
+    let
+      labRoundtrip h' s' l' =
+        case toLab col of
+          { l, a, b } ->
+            almostEqual col (lab l a b)
+        where
+        col = hsl h' s' l'
 
     equal red (lab 53.233 80.109 67.220)
     sequence_ do
@@ -160,11 +168,13 @@ main = runTest do
       pure $ labRoundtrip (toNumber hue) 0.2 0.8
 
   test "lch / toLCh (LCh -> HSL -> LCh)" do
-    let lchRoundtrip h' s' l' =
-          case toLCh col of
-            { l, c, h } ->
-              almostEqual col (lch l c h)
-            where col = hsl h' s' l'
+    let
+      lchRoundtrip h' s' l' =
+        case toLCh col of
+          { l, c, h } ->
+            almostEqual col (lch l c h)
+        where
+        col = hsl h' s' l'
 
     equal (hsl 0.0 1.0 0.245) (lch 24.829 60.093 38.18)
     sequence_ do
@@ -214,7 +224,7 @@ main = runTest do
 
   test "toGray" do
     equal (graytone 0.3) (toGray (graytone 0.3))
-    for_ [cyan, yellow, red, pink, blue, white, black] $ \col ->
+    for_ [ cyan, yellow, red, pink, blue, white, black ] $ \col ->
       equal (round $ 100.0 * luminance col) (round $ 100.0 * luminance (toGray col))
 
   test "mix" do
@@ -230,7 +240,7 @@ main = runTest do
     equal 1.0 (luminance white)
     equal 808 (round (1000.0 * luminance aquamarine))
     equal 347 (round (1000.0 * luminance hotpink))
-    equal  66 (round (1000.0 * luminance darkslateblue))
+    equal 66 (round (1000.0 * luminance darkslateblue))
     equal 0.0 (luminance black)
 
   test "contrast" do
@@ -250,8 +260,9 @@ main = runTest do
   -- Color.Blending
 
   test "blend" do
-    let b = rgb 255 102 0
-        f = rgb 51 51 51
+    let
+      b = rgb 255 102 0
+      f = rgb 51 51 51
     equal (rgb 51 20 0) (blend Multiply b f)
     equal (rgb 255 133 51) (blend Screen b f)
     equal (rgb 255 41 0) (blend Overlay b f)
@@ -261,33 +272,33 @@ main = runTest do
   let scale = colorScale HSL red (colorStop blue 0.3 : Nil) yellow
 
   test "colorScale, sample" do
-    equal red    (sample scale (-10.0))
-    equal red    (sample scale 0.0)
-    equal red    (sample scale 0.0001)
-    equal blue   (sample scale 0.2999)
-    equal blue   (sample scale 0.3)
-    equal blue   (sample scale 0.3001)
+    equal red (sample scale (-10.0))
+    equal red (sample scale 0.0)
+    equal red (sample scale 0.0001)
+    equal blue (sample scale 0.2999)
+    equal blue (sample scale 0.3)
+    equal blue (sample scale 0.3001)
     equal yellow (sample scale 0.9999)
     equal yellow (sample scale 1.0)
     equal yellow (sample scale 10.0)
 
-    equal (mix HSL red blue 0.5)    (sample scale 0.15)
+    equal (mix HSL red blue 0.5) (sample scale 0.15)
     equal (mix HSL blue yellow 0.5) (sample scale 0.65)
 
   test "uniformScale" do
     let uscale = uniformScale HSL red (hotpink : yellow : magenta : Nil) blue
     equal hotpink (sample uscale 0.25)
-    equal red     (sample uscale 0.0)
-    equal yellow  (sample uscale 0.5)
+    equal red (sample uscale 0.0)
+    equal yellow (sample uscale 0.5)
     equal magenta (sample uscale 0.75)
-    equal blue    (sample uscale 1.0)
+    equal blue (sample uscale 1.0)
 
   test "colors" do
-    equal (Nil)                (colors scale 0)
-    equal (red : Nil)          (colors scale 1)
+    equal (Nil) (colors scale 0)
+    equal (red : Nil) (colors scale 1)
     equal (red : yellow : Nil) (colors scale 2)
     equal (black : graytone 0.25 : graytone 0.5 : graytone 0.75 : white : Nil)
-          (colors grayscale 5)
+      (colors grayscale 5)
 
   test "grayscale" do
     equal black (sample grayscale 0.0)
